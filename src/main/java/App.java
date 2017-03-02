@@ -1,0 +1,19 @@
+/**
+ * Created by WORK_x64 on 02.03.2017.
+ */
+public class App {
+    public static void main(String[] args) {
+        App app = new App();
+
+        app.client = new Client("1", "John Smith");
+        app.eventLogger = new ConsoleEventLogger();
+    }
+
+    private Client client;
+    private ConsoleEventLogger eventLogger;
+
+    private void logEvent(String msg) {
+        String message = msg.replaceAll(client.getId(), client.getFullName());
+        eventLogger.logEvent(message);
+    }
+}
