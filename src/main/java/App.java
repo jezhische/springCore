@@ -7,6 +7,8 @@ public class App {
 
         app.client = new Client("1", "John Smith");
         app.eventLogger = new ConsoleEventLogger();
+
+        app.logEvent("Some event for user 1");
     }
 
     private Client client;
