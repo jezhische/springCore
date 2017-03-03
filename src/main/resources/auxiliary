@@ -1,0 +1,51 @@
+www.springframework.org/schema/beans/spring-beans-4.3.xsd
+----------------------------------------------
+Создаем содержание контейнера с бинами:
+----------------------------------------------
+........
+(урок 3)
+ <bean id="client" .../>
+ <bean id="client" name="xxx,zzz" class="springCore.beans.Client"/>
+ <alias name="xxx" alias="bbb"></alias>
+
+ 2 способа заинжектить инфо в bean:
+ #1 СПОСОБ:
+     - если статические аргументы (simple values):
+             <bean id="client" class="springCore.beans.Client">
+                <constructor-arg value="1"/>
+                <constructor-arg value="John Smith"/>
+             </bean>
+     - (если нужно указать порядок следования элементов, можно воспользоваться индексом):
+             <bean id="client" class="springCore.beans.Client">
+                <constructor-arg index="0" value="1"/>
+                <constructor-arg index="1" value="John Smith"/>
+             </bean>
+ЕСЛИ АРГУМЕНТЫ РАЗНОГО ТИПА, МОЖНО УКАЗЫВАТЬ В РАЗНОМ ПОРЯДКЕ
+     - (если аргументы разного типа, но с одинаковой value):
+             <bean id="client" class="springCore.beans.Client">
+                <constructor-arg type="java.lang.Integer" value="1"/>
+                <constructor-arg type="java.lang.String" value="1"/>
+             </bean>
+     - (если включены debug simbols, можно использовать имена аргументов):
+            <bean id="client" class="springCore.beans.Client">
+                <constructor-arg name="id" value="1"/>
+                <constructor-arg name="fullName" value="John Smith"/>
+            </bean>
+
+ #2 СПОСОБ:
+ как проинжектить бин в бин (если аргументы ссылочные):
+    <bean id="app" class="springCore.App">
+        <constructor-arg ref="client"/>
+        <constructor-arg ref="eventLogger"/>
+    </bean>
+ СПРИНГ ВЫЗОВЕТ ЛЮБОЙ, ДАЖЕ PRIVATE КОНСТРУКТОР (нужно уточнить насчет этого - нарушается инкапсуляция?)
+
+-------------------------------------------------
+Создаем сам контейнер:
+--------------------------------------------------
+1) BeanFactory - делает только Dependency Injection
+2) ApplicationContext - DI + framework services
+    * ClassPathXmlApplicationContext
+    * FileSystemXmlApplicationContext
+    * XmlWebApplicationContext
+    * StaticApplicationContext

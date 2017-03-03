@@ -1,3 +1,5 @@
+package beans;
+
 /**
  * Created by WORK_x64 on 02.03.2017.
  */
