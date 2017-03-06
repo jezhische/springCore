@@ -1,0 +1,25 @@
+(урок 4)
+bean scope - время жизни бина в контейнере
+by default scope = "singleton" (каждый раз, когда запрашиваем бин из контейнера, он возвращает один и тот же бин,
+который был создан при инициализации)
+Prototype - new object on every bean call:
+<bean id = "... "class="..." scope="prototype"> (каждый раз возвращается новый бин)
+Еще три scope in spring:
+For web applications:
+    * request
+    * session
+    * global-session
+
+ <!-- внутренний бин - виден только там, где он определен, поэтому не имеет имени или id - достучаться до него
+         невозможно. Будет создаваться при создании event-->
+        <constructor-arg>
+            <bean class="java.util.Date"/>
+        </constructor-arg>
+
+ <!-- поскольку DateFormat - абстрактный класс, для создания его образца нужно воспользоваться статическим методом.
+  Это возможно в spring с помощью использования factory-method: -->
+     <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInetance"/>
+   <!-- NB: класс объекта, который возвращает factory-method, не обязательно должен совпадать с классом,
+   где этот метод находится (с java.text.DateFormat)
+   NB: если нужно передать аргументы в factory-method, нужно создать <constructor-arg> -->
+

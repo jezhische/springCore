@@ -2,18 +2,32 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-    <bean id="client" class="springCore.src.main.java.beans.Client.java">
+    <bean id="client" class="beans.Client">
         <constructor-arg value="1"/>
         <constructor-arg value="John Smith"/>
     </bean>
 
-    <bean id="eventLogger" class="springCore.src.main.java.loggers.ConsoleEventLogger"/>
+    <bean id="eventLogger" class="loggers.ConsoleEventLogger"/>
 
-    <bean id="app" class="springCore.src.main.java.App">
+    <bean id="app" class="App">
         <constructor-arg ref="client"/>
         <constructor-arg ref="eventLogger"/>
     </bean>
+<!-- Prototype - new object on every bean call: -->
+    <bean id="event" class="events.Event" scope="prototype">
+        <!-- внутренний бин - виден только там, где он определен, поэтому не имеет имени или id - достучаться до него
+         невозможно. Будет создаваться при создании event: -->
+        <constructor-arg>
+            <bean class="java.util.Date"/>
+        </constructor-arg>
+        <!--<constructor-arg ref="date"/>-->
+        <!--<constructor-arg ref="df"/>-->
+    </bean>
+
+<!-- поскольку DateFormat - абстрактный класс, для создания его образца нужно воспользоваться статическим методом.
+ Это возможно в spring с помощью использования factory-method: -->
+    <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInetance"/>
 
 </beans>

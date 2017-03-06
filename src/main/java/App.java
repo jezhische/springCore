@@ -1,11 +1,9 @@
 import beans.Client;
-import org.springframework.beans.factory.BeanFactory;
+import events.Event;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import utilities.EventLogger;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -13,16 +11,12 @@ import java.io.IOException;
  */
 public class App {
     public static void main(String[] args) throws IOException {
-//        BeanFactory bf
+
         ApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
         App app = (App) ctx.getBean("app");
-
         app.logEvent("Some event for 1");
         app.logEvent("Some event for 2");
-//        FileInputStream fis = new FileInputStream("src\\main\\resources\\spring.xml");
-//        int i = 0;
-//        while((i = fis.read()) != -1)
-//            System.out.print((char)i);
+
     }
 
     private Client client;
@@ -35,6 +29,6 @@ public class App {
 
     private void logEvent(String msg) {
         String message = msg.replaceAll(client.getId(), client.getFullName());
-        eventLogger.logEvent(message);
+        eventLogger.logEvent(new Event());
     }
 }
