@@ -1,6 +1,7 @@
 import beans.Client;
 import events.Event;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import utilities.EventLogger;
 
@@ -12,10 +13,14 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) throws IOException {
 
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
+        /* данный класс контекста использовать можно, но он не содержит метода close(), а он нам будет нужен: **/
+//        ApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
+        /* поэтому вызываем его класс-наследник (NB - это тоже интерфейс): **/
+        ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
         App app = (App) ctx.getBean("app");
         app.logEvent("Some event for 1");
         app.logEvent("Some event for 2");
+        ctx.close();
 
     }
 
@@ -29,6 +34,7 @@ public class App {
 
     private void logEvent(String msg) {
         String message = msg.replaceAll(client.getId(), client.getFullName());
+        System.out.println(message);
         eventLogger.logEvent(new Event());
     }
 }

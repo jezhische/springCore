@@ -4,6 +4,11 @@
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
+    <bean id="app" class="App">
+        <constructor-arg ref="client"/>
+        <constructor-arg ref="cacheFileEventLogger"/>
+    </bean>
+
     <bean id="client" class="beans.Client">
         <constructor-arg value="1"/>
         <constructor-arg value="John Smith"/>
@@ -11,10 +16,15 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
     <bean id="eventLogger" class="loggers.ConsoleEventLogger"/>
 
-    <bean id="app" class="App">
-        <constructor-arg ref="client"/>
-        <constructor-arg ref="eventLogger"/>
+    <bean id="fileEventLogger" class="loggers.FileEventLogger" init-method="init">
+        <constructor-arg value="src\main\resources\loggfiles\log1.txt"/>
     </bean>
+
+    <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" destroy-method="destroy">
+        <constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>
+        <constructor-arg value="3"/>
+    </bean>
+
 <!-- Prototype - new object on every bean call: -->
     <bean id="event" class="events.Event" scope="prototype">
         <!-- внутренний бин - виден только там, где он определен, поэтому не имеет имени или id - достучаться до него
@@ -28,6 +38,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 <!-- поскольку DateFormat - абстрактный класс, для создания его образца нужно воспользоваться статическим методом.
  Это возможно в spring с помощью использования factory-method: -->
-    <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInetance"/>
+    <!--<bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInetance"/>-->
 
 </beans>
