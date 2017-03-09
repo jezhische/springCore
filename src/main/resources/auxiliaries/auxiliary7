@@ -21,6 +21,22 @@ PROPERTY INJECTION
         </bean>
 получим не John Smith, а Jeremy Boldwin
 
+CONSTRUCTOR INJECTION LIST OR ARRAY
+    <bean name="combinedEventLogger" class="loggers.CombinedEventLogger">
+        <constructor-arg>
+            <list>
+                <value>...</value> -- simple values
+                <ref bean="..."/> -- other beans
+                <bean class="..."/> -- inner-beans
+            </list>
+        </constructor-arg>
+    </bean>
+SET
+    <set>
+    ....
+    <set>
+
+
 
 
 

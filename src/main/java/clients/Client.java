@@ -29,4 +29,5 @@ public class Client {
     public void setGreetings (String gr) {
         greeting = gr;
     }
+
 }
