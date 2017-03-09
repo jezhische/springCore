@@ -3,26 +3,20 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+<!--default-lazy-init="true">-->
+
+    <import resource="loggers.xml"/>
 
     <bean id="app" class="App">
         <constructor-arg ref="client"/>
         <constructor-arg ref="cacheFileEventLogger"/>
     </bean>
 
-    <bean id="client" class="beans.Client">
+    <bean id="client" class="clients.Client">
         <constructor-arg value="1"/>
         <constructor-arg value="John Smith"/>
-    </bean>
-
-    <bean id="eventLogger" class="loggers.ConsoleEventLogger"/>
-
-    <bean id="fileEventLogger" class="loggers.FileEventLogger" init-method="init">
-        <constructor-arg value="src\main\resources\loggfiles\log1.txt"/>
-    </bean>
-
-    <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" destroy-method="destroy">
-        <constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>
-        <constructor-arg value="3"/>
+        <property name="fullName" value="Jeremy Boldwin"/>
+        <property name="greetings" value="Hello there!"/>
     </bean>
 
 <!-- Prototype - new object on every bean call: -->
@@ -38,6 +32,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 <!-- поскольку DateFormat - абстрактный класс, для создания его образца нужно воспользоваться статическим методом.
  Это возможно в spring с помощью использования factory-method: -->
-    <!--<bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInetance"/>-->
+    <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInstance"/>
 
 </beans>

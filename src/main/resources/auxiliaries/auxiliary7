@@ -1,0 +1,26 @@
+PROPERTY INJECTION
+    Через property устанавливаются привязки (например, id и name для client м.установить через конструктор, а привязки
+    типа greeting - через property; но м. использовать что-то одно):
+    <bean id="client" class="clients.Client">
+        <constructor-arg value="1"/>
+        <constructor-arg value="John Smith"/>
+        <property name="greetings" value="Hello there!"/>
+    </bean>
+    Чтобы это работало, необходимо наличие сеттера (геттер необязателен).
+Таким же образом м. проинжектить бин или внутренний бин:
+    <property name="..." ref=:..."/>
+
+    <property name="...">
+        <bean class="..."> -- inner bean
+    </property>
+Вот в таком случае:
+     <bean id="client" class="clients.Client">
+            <constructor-arg value="1"/>
+            <constructor-arg value="John Smith"/>
+            <property name="fullName" value="Jeremy Boldwin"/>
+        </bean>
+получим не John Smith, а Jeremy Boldwin
+
+
+
+

@@ -1,0 +1,44 @@
+BEAN DEFINITION INHERITANCE - наследование определений в бине
+благодаря указанию на родителя parent можно не указывать все, что было указано у родителя
+    todo: - например, не тогда не нужно указывать метод init()
+        <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" destroy-method="destroy"
+              parent="fileEventLogger">
+    todo: Однако, в случае указания parent нельзя изменять уже описанные в parent-классе параметры, например, так:
+        <constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>
+ Бин-родитель можно определить как абстрактный, тогда бин не будет создаваться, но его свойства передадутся потомку.
+ todo: абстрактный родитель может вообще не мапиться ни на какой класс, поэтому вместо:-->
+     <bean id="fileEventLogger" class="loggers.FileEventLogger" init-method="init" abstract="true">
+ указываем просто:
+     <bean id="fileEventLogger" init-method="init" abstract="true">
+- поскольку наследование классов не означает наследование определений, т.е. бинов. И наоборот: если указаны отношения
+parent - child, м. воспользоваться вообще любым бином в качестве parent для передачи значений конструктора в child.
+
+BEAN DEPENDENCY
+<bean id=.....depends-on="app","event", .../> - значит, что данный бин будет инициализирован только ПОСЛЕ УКАЗАННЫХ.
+
+LAZY INITIALIZATION
+вообще бины создаются сразу при создании контекста. Но если так:
+<bean id=.....lazy-init="true"/>, то он создастся только после вызова getBean
+либо: <clients......default-lazy-init="true"> - все бины попадут под ленивую инициализацию (no clients will be pre-instatiated)
+
+MULTIPLE CONTEXT - импорт xml файлов конфигурации: файл конфигурации м. разбить на несколько, использовав:
+<clients>
+    <import resource="loggers.xml"/>
+</clients>
+(строчку м. написать в любом месте внутри тега clients)
+
+MULTIPLE CONTEXT - наследование контекста - чтобы была базовая логика и любое количесто файлов, использующих и
+собственные бины, и бины от родителя:
+ApplicationContext parent = new ClassPathXmlApplicationContext("...");
+/* FIXME: разобраться с этим - выкидывает ошибку: **/
+//        ConfigurableApplicationContext child = new ClassPathXmlApplicationContext(parent);
+//        App app2 = (App) child.getBean("app");
+//        app2.logEvent("Some event for 1");
+//        app2.logEvent("Some event for 2");
+//        child.close();
+
+
+
+
+
+

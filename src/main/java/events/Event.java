@@ -39,9 +39,7 @@ public class Event {
 
     public Event(/*Date date, DateFormat df*/) {
         id = new Random().nextInt(100);
-//        this.date = date;
         date = new Date();
-//        this.df = df;
     }
 
     @Override

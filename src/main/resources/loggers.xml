@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd"
+       default-lazy-init="true">
+    <bean id="eventLogger" class="loggers.ConsoleEventLogger"/>
+
+    <!--Бин-родитель можно определить как абстрактный, тогда бин не будет солздаваться, но его свойства передадутся потомку.
+    todo: абстрактный родитель может вообще не мапиться ни на какой класс, поэтому вместо:-->
+    <!--<bean id="fileEventLogger" class="loggers.FileEventLogger" init-method="init" abstract="true">-->
+    <!-- указываем просто: -->
+    <bean id="fileEventLogger" init-method="init" abstract="true">
+        <!--(наследование классов не означает наследование определений, т.е. бинов)-->
+        <constructor-arg value="src\main\resources\loggfiles\log1.txt"/>
+    </bean>
+
+    <!-- благодаря указанию на родителя parent можно не указывать все, что было указано у родителя
+    todo: - например, не тогда не нужно указывать метод init() -->
+    <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" destroy-method="destroy"
+          parent="fileEventLogger">
+        <!-- todo: Однако, в случае указания parent нельзя изменять уже описанные в parent-классе параметры, например, так: -->
+        <!--<constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>-->
+        <constructor-arg value="3"/>
+    </bean>
+
+
+</beans>

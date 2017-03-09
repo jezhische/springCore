@@ -1,6 +1,5 @@
-import beans.Client;
+import clients.Client;
 import events.Event;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import utilities.EventLogger;
@@ -21,6 +20,12 @@ public class App {
         app.logEvent("Some event for 1");
         app.logEvent("Some event for 2");
         ctx.close();
+/* FIXME: разобраться с этим - выкидывает ошибку: **/
+//        ConfigurableApplicationContext child = new ClassPathXmlApplicationContext(ctx);
+//        App app2 = (App) child.getBean("app");
+//        app2.logEvent("Some event for 1");
+//        app2.logEvent("Some event for 2");
+//        child.close();
 
     }
 

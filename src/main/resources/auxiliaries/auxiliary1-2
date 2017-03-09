@@ -1,0 +1,46 @@
+Преимущества:
+Lightweight jar libraries
+Container
+Fraimwork
+Dependency Injection (Inversion of Control): объекты не создают зависимости, а получают
+AOP (aspect oriented programming)
+
+Модули:
+Core container:
+    Beans     Core       Context     Expression
+AOP:
+    AOP     Aspects
+Instrumentation:
+    Instruments
+Data access and integration:
+    JDBC    JMS    ORM    Transaction
+Web and Remouting:
+    Web    Servlet    Struts
+Testing:
+    Test
+
+Проблемы приложения без spring:
+Modification is problematic
+    Data inside code
+Scaling is impossible
+    Logger is created in single instance
+Testing is hard
+    Unit test for App.logEvent() method indirectly tests ConsoleEventLogger.logEvent()
+Т.е.: сильная связанность приложения (High/Tight Coupling): классы создают друг друга, в них зашиты данные, логи,
+
+-----------------------------------------------------------------------------------------------------------
+
+Решение (урок 2):
+Externalize static data
+    Use non-binary and non-code files
+Decouple (classes) with interfaces
+    Use with multiple implementations (возможность использовать в классах объекты интерфейсов, а не конкретные
+    реализации других классов. Но не нужно создааать интерефейсы на классы, которые только хранят информацию)
+Inject dependencies
+    Let objects receive and not create others
+
+
+
+
+
+

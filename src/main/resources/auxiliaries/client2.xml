@@ -4,7 +4,7 @@
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="client" class="beans.Client">
+    <bean id="client" class="clients.Client">
         <constructor-arg value="2"/>
         <constructor-arg value="Udo Kahayama"/>
     </bean>
