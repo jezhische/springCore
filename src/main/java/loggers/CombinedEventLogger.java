@@ -3,20 +3,23 @@ package loggers;
 import events.Event;
 import utilities.EventLogger;
 
-import java.util.List;
-
 /**
  * Created by WORK_x64 on 09.03.2017.
  */
 public class CombinedEventLogger implements EventLogger {
-    List<EventLogger> loggers;
+    private EventLogger consoleEventLogger, fileEventLogger;
 
-    CombinedEventLogger(List<EventLogger> loggers) {
-        this.loggers = loggers;
+    public void setConsoleEventLogger(EventLogger consoleEventLogger) {
+        this.consoleEventLogger = consoleEventLogger;
+    }
+
+    public void setFileEventLogger(EventLogger fileEventLogger) {
+        this.fileEventLogger = fileEventLogger;
     }
 
     @Override
     public void logEvent(Event event) {
-
+        consoleEventLogger.logEvent(event);
+        fileEventLogger.logEvent(event);
     }
 }

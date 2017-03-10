@@ -10,8 +10,13 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     todo: абстрактный родитель может вообще не мапиться ни на какой класс, поэтому вместо:-->
     <!--<bean id="fileEventLogger" class="loggers.FileEventLogger" init-method="init" abstract="true">-->
     <!-- указываем просто: -->
-    <bean id="fileEventLogger" init-method="init" abstract="true">
-        <!--(наследование классов не означает наследование определений, т.е. бинов)-->
+    <!--<bean id="fileEventLogger" init-method="init" abstract="true">-->
+        <!--&lt;!&ndash;(наследование классов не означает наследование определений, т.е. бинов)&ndash;&gt;-->
+        <!--<constructor-arg value="src\main\resources\loggfiles\log1.txt"/>-->
+    <!--</bean>-->
+
+    <!--однако, нам в дальнейшем понадобится не-абстрактный объект, поэтому создаем его:-->
+    <bean id="fileEventLogger" class="loggers.FileEventLogger" init-method="init">
         <constructor-arg value="src\main\resources\loggfiles\log1.txt"/>
     </bean>
 
@@ -25,12 +30,14 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     </bean>
 
     <bean name="combinedEventLogger" class="loggers.CombinedEventLogger">
-        <constructor-arg>
-            <list>
-                <ref bean="consoleEventLogger"/>
-                <ref bean="fileEventLogger"/>
-            </list>
-        </constructor-arg>
+        <property name="consoleEventLogger" ref="consoleEventLogger"/>
+        <property name="fileEventLogger" ref="fileEventLogger"/>
+    </bean>
+
+    <bean name="defaultLogger" class="loggers.CacheFileEventLogger" init-method="init" destroy-method="destroy">
+        <constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>
+        <constructor-arg value="3"/>
+
     </bean>
 
 

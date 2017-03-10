@@ -4,7 +4,7 @@ PROPERTY INJECTION
     <bean id="client" class="clients.Client">
         <constructor-arg value="1"/>
         <constructor-arg value="John Smith"/>
-        <property name="greetings" value="Hello there!"/>
+        <property name="greetings" value="Hello there!"/> --здесь только name, а не id
     </bean>
     Чтобы это работало, необходимо наличие сеттера (геттер необязателен).
 Таким же образом м. проинжектить бин или внутренний бин:
@@ -21,7 +21,9 @@ PROPERTY INJECTION
         </bean>
 получим не John Smith, а Jeremy Boldwin
 
-CONSTRUCTOR INJECTION LIST OR ARRAY
+CONSTRUCTOR INJECTION OF LIST OR ARRAY:
+создаем коллекцию: определяя value или ссылку на существующий бин, или создавая внутренний бин
+- тем самым ЗАНОСИМ ЭТО ЗНАЧЕНИЕ В СПИСОК:
     <bean name="combinedEventLogger" class="loggers.CombinedEventLogger">
         <constructor-arg>
             <list>
@@ -35,6 +37,31 @@ SET
     <set>
     ....
     <set>
+MAP - разные варианты:
+            <map>
+                <entry key="..." value="..."/> -- передача простых значений
+                <entry key="..." value-ref="..."/>
+                <entry key-ref="..." value-ref="..."/> -- референсы на какие-то бины
+                <entry key="...">
+                    <bean class="..."/> -- inner-bean
+                </entry>
+            </map>
+
+ENUM - переменные перечисления пишутся без указания полного имени класса, спринг это понимает (напр., <entry key="INFO"..../>)
+
+INJECTING PROPERTIES
+java.util.properties (в принципе, та же map, где ключи и значения - это String)
+<props>
+    <prop key="...">...</prop>
+    <prop key="...">...</prop>
+</props>
+
+NULL
+(если какую-то property нужно установить в null):
+<property name="soneNullProperty">
+    <null/>
+</property>
+
 
 
 

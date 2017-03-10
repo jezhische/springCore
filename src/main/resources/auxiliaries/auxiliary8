@@ -1,0 +1,32 @@
+PROPERTIES FILE
+    <!-- подключение properties: -->
+    <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="locations">
+            <!-- <list value-type="client.properties"/> - можно так? -->
+            <list>
+                <!-- путь в данном случае определяется через директиву classpath, но можно чз. указание пути: -->
+                <value>classpath:client.properties</value>
+            </list>
+        </property>
+        
+        <!-- игнорирование отсутствующих ресурсов - чтобы не выскочило исключение: -->
+        <property name="ignoreResourceNotFound" value="true"/>
+
+        <!-- systemPropertiesMode: по умолчанию _FALLBACK: если ключ не найден в property-файлах, то спринг попробует
+         найти его в системных свойствах и переменных окружения - это чтобы оставить возможность переопределять значения
+         свойств объектов через систем пропертиз, которые передаются при запуске приложения;
+         _OVERRIDE: свойтсва системы будут просмотрены первыми (а значения в property-файле выступят тогда значениями
+         по умолчанию); _NEVER - не будут никогда-->
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
+
+ ПЕРЕДАЧА ЗНАЧЕНИЙ ИЗ PROPERTIES FILE:
+        знак $ указывает контексту, что в фигурных скобках {} находится ключ из properties file:
+            <bean id="client" class="clients.Client">
+                <constructor-arg>
+                    <value>${id}</value>
+                </constructor-arg>
+                <constructor-arg value="${name}"/>
+                <!--<property name="fullName" value="Jeremy Boldwin"/>-->
+                <property name="greetings" value="${greeting}"/>
+            </bean>
