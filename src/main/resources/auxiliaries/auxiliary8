@@ -8,7 +8,7 @@ PROPERTIES FILE
                 <value>classpath:client.properties</value>
             </list>
         </property>
-        
+
         <!-- игнорирование отсутствующих ресурсов - чтобы не выскочило исключение: -->
         <property name="ignoreResourceNotFound" value="true"/>
 
@@ -30,3 +30,58 @@ PROPERTIES FILE
                 <!--<property name="fullName" value="Jeremy Boldwin"/>-->
                 <property name="greetings" value="${greeting}"/>
             </bean>
+
+ПОДКЛЮЧЕНИЕ УТИЛИТ:
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+    xmlns:util="http://www.springframework.org/schema/util"
+
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+</beans>
+
+ИСПОЛЬЗОВАНИЕ UTIL NAMESPASE:
+ИСПОЛЬЗОВАНИЕ КОНСТАНТЫ, определенной в каком-либо классе, в качестве аргумента конструктора или значения свойства (property):
+            <property name="type">
+                <util:constant static-field="java.lang.Math.PI"/>
+            </property>
+
+ОПРЕДЕЛЕНИЕ СПИСКА, MAP, НАБОРОВ СВОЙСТВ КАК ОТДЕЛЬНЫХ БИНОВ С ПОМОЩЬЮ UTIL NAMESPASE:
+(возможность переиспользовать их несколько раз, обращаться к спискам как к отдельным сущностям, а не просто
+как к полям класса, определенным в свойстве соответствующего бина или аргументе конструктора):
+- с помощью тегов <util:properties.../>, <util:map.../>, <util:list.../>
+    <!-- создание отдельного бина clientProps типа java.util.properties из файла "src/main/resources/client.properties": -->
+    <util:properties id="clientProps" location="classpath:client.properties"/>
+    <!-- создание map с соответствующими записями для использования в "app" как отдельного бина: -->
+    <util:map id="loggerMap">
+        <entry key="INFO" value-ref="consoleEventLogger"/>
+        <entry key="ERROR" value-ref="combinedEventLogger"/>
+    </util:map>
+Можно также сразу указать класс этого map:
+    <util:map id="loggerMap" map-class="java.util.TreeMap">
+        .......
+    </util:map>
+
+СОКРАЩЕННАЯ ЗАПИСЬ СВОЙСТВ БИНОВ И АРГУМЕНТОВ КОНСТРУКТОРА - чтобы
+указывать проперти и параметры конструктора не отдельными тегами, а с помощью атрибутов тега <bean>:
+необходимо определить еще две схемы namespace:
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:c="http://www.springframework.org/schema/c"
+- только что-то они не подгружаются! вот здесь http://forum.spring.io/forum/spring-projects/container/39221-p-namespace-move пишут:
+One special namespace is not defined in an XSD file, and only exists in the core of Spring itself. The so-called
+p-namespace doesn't need a schema definition and is an alternative way of configuring your properties
+differently than the way you have seen so far.
+ЭТО ОЗНАЧАЕТ, ЧТО ДАННЫЕ АДРЕСА не являются ссылками, указывающими на конкретный xmlns (namespace) ресурс (словарь),
+а просто строками, резервирующими данные имена в namespace документа, и их не нужно указывать как ссылку в
+xsi:schemaLocation= (xsi - это XML Schema Instance)
+ДАЛЕЕ, по идее, нужно сделать так: вместо отдельного тега .... пишем в теге бина:
+     <bean id="app" class="App" p:client-ref="client">
+
+
+
+

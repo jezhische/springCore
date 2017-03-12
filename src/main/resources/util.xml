@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xmlns:util="http://www.springframework.org/schema/util"
+
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+    <!-- создание отдельного бина clientProps типа java.util.properties из файла "src/main/resources/client.properties": -->
+    <util:properties id="clientProps" location="classpath:client.properties"/>
+    <!-- создание map с соответствующими записями для использования в "app" как отдельного бина: -->
+    <util:map id="loggerMap">
+        <entry key="INFO" value-ref="consoleEventLogger"/>
+        <entry key="ERROR" value-ref="combinedEventLogger"/>
+    </util:map>
+
+</beans>

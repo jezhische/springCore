@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+
        xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
-<!--default-lazy-init="true">-->
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
     <import resource="loggers.xml"/>
+    <import resource="util.xml"/>
 
     <!-- подключение properties: -->
     <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
@@ -24,16 +33,21 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
+
+
     <!-- bean creating -->
+    <!-- вот так не работает:  <bean id="app" class="App" p:client-ref="client"> -->
     <bean id="app" class="App">
         <constructor-arg ref="client"/>
         <constructor-arg ref="cacheFileEventLogger"/>
-        <constructor-arg>
-            <map>
-                <entry key="INFO" value-ref="consoleEventLogger"/>
-                <entry key="ERROR" value-ref="combinedEventLogger"/>
-            </map>
-        </constructor-arg>
+        <!-- следующая map теперь создана как отдельный бин в файле util.xml с помощью util spacename: -->
+        <!--<constructor-arg>-->
+            <!--<map>-->
+                <!--<entry key="INFO" value-ref="consoleEventLogger"/>-->
+                <!--<entry key="ERROR" value-ref="combinedEventLogger"/>-->
+            <!--</map>-->
+        <!--</constructor-arg>-->
+        <constructor-arg ref="loggerMap"/>
         <property name="defaultLogger" ref="defaultLogger"/>
     </bean>
 
@@ -46,6 +60,15 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
         <!--<property name="fullName" value="Jeremy Boldwin"/>-->
         <property name="greetings" value="${greeting}"/>
     </bean>
+
+    <!--&lt;!&ndash; СОКРАЩЕННАЯ ЗАПИСЬ СВОЙСВ БИНА: &ndash;&gt;-->
+    <!--<bean id="client" class="clients.Client" c:name="${name}" p:greeting="Hello here and there!">-->
+        <!--<constructor-arg>-->
+            <!--<value>${id}</value>-->
+        <!--</constructor-arg>-->
+        <!--&lt;!&ndash;<constructor-arg value="${name}"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="greetings" value="${greeting}"/>&ndash;&gt;-->
+    <!--</bean>-->
 
 <!-- Prototype - new object on every bean call: -->
     <bean id="event" class="events.Event" scope="prototype">
