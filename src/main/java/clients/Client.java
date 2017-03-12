@@ -4,7 +4,7 @@ package clients;
  * Created by WORK_x64 on 02.03.2017.
  */
 public class Client {
-    private String id, fullName, greeting;
+    private String id, fullName, greetings;
     public Client(String id, String fullName) {
         this.id = id;
         this.fullName = fullName;
@@ -27,7 +27,7 @@ public class Client {
     }
 
     public void setGreetings (String gr) {
-        greeting = gr;
+        greetings = gr;
     }
 
 }

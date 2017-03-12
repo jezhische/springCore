@@ -1,6 +1,8 @@
 import clients.Client;
 import events.Event;
 import events.EventType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import utilities.EventLogger;
@@ -39,8 +41,12 @@ public class App {
 
     }
 
+    @Autowired
     private Client client;
-    private EventLogger eventLogger, defaultLogger;
+    private EventLogger eventLogger;
+    @Autowired
+    @Qualifier ("fileEventLogger")
+    private EventLogger defaultLogger;
     private Map<EventType, EventLogger> loggers;
 
 

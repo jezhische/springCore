@@ -1,0 +1,50 @@
+CONFIGURATION WITH ANNOTATIONS
+В <beans> добавляем:
+xmlns:context="http://www.springframework.org/schema/context"
+В xsi:schemaLocation= добавляем:
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.3.xsd
+затем тег <context:annotation-config/> (внутри <beans>...</beans>, на месте ...)
+
+@Autowired
+@Autowired (required=false)
+Это именно спринг-аннотация: указание спринг, что значение какого-то свойства нужно вставить из контекста.
+Стандартная аннотация, которая будет понятна и для других фреймворков, например, для jbos 7:
+@Inject -- JSR 330
+Разница в том, что для @Autowired можно установить атрибут required=false, тогда при отсутствии нужного бина
+для внедрения будет установлено null (иначе получаем Exception)
+public class App {
+    @Autowired
+    private Client client;
+}
+Вместо того, чтобы имплементировать Aware-интерфейсы, теперь для той же цели можно воспользоваться @Autowired -
+с его помощью можно внедрить также внутренние объекты спринг, такие как BeanFactory, ApplicationContext,
+ResourceLoader, ApplicationEventPublisher
+            public class App {
+                @Autowired      // field
+                private Client client;
+
+                @Autowired      // setter
+                public void setLogger(...) {...}
+
+                @Autowired      // constructor
+                public App(Client client, ...) {...}
+            }
+Но при внедрении зависимостей через поля класса ( @Autowired
+                                                  private Client client;) - ПРИ ОТСУТСТВИИ СЕТТЕРА очень сильно
+усложняется Unit-тестирование, поскольку уже нет простого способа вставить mock.
+
+
+@Qualifier("bean-name") (спринг-аннотация)
+@Resource(name="...") -- JSR 250  (JDK-аннотация)
+- если невозможно внедрить зависимости по типу (например, под тип интерфейса EventLogger подходит несколько бинов)
+(рекомендуется внедрять через @Resource (но эту аннотацию нельзя поставить перед конструктором))
+public class App {
+    @Autowired
+    @Qualifier ("fileEventLogger")
+    private EventLogger defaultLogger;
+}
+
+
+
+

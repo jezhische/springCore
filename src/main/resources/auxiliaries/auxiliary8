@@ -79,9 +79,47 @@ differently than the way you have seen so far.
 ЭТО ОЗНАЧАЕТ, ЧТО ДАННЫЕ АДРЕСА не являются ссылками, указывающими на конкретный xmlns (namespace) ресурс (словарь),
 а просто строками, резервирующими данные имена в namespace документа, и их не нужно указывать как ссылку в
 xsi:schemaLocation= (xsi - это XML Schema Instance)
-ДАЛЕЕ, по идее, нужно сделать так: вместо отдельного тега .... пишем в теге бина:
-     <bean id="app" class="App" p:client-ref="client">
+ДАЛЕЕ: вместо отдельного тега <constructor-arg ref="client"/> пишем в теге бина:
+(todo: обязательно должны быть сеттеры для переменных, иначе они не проставятся!)
+     <bean id="app" class="App" c:client-ref="client">
+                (если бы был не-ссылочный тип, то нужно писать просто
+                 c:client="client" (а как, например, со стрингом? нужно попробовать, скорее всего, если
+                 написать литерал, то -ref не нужно, а если это ссылка на переменную - то нужно) - см. ниже)
+ЕЩЕ:
+        <bean id="client" class="clients.Client" p:greetings="Hello">
 
+AUTOWIRE - автоматическое связывание с подходящим бином:
+    <bean id="..." class="..." autowire="..."/>
+        * byName        - Property name
+        * byType        - Bean class in property (искать бин, класс которого подходит для этого проперти)
+        * constructor   - Bean class in constructor (по типу через конструктор)
+    ограничения:
+    - can't be used with primitives, String, and class
+    - direct reference has higher priority
 
+СВЯЗЬ КЛАССА СО СПРИНГ: ОПРЕДЕЛЕНИЕ, В КАКОМ КОНТЕКСТЕ НАХОДИТСЯ КЛАСС:
+с помощью набора Aware-интерфейсов. Реализовав их, можно получить различную информацию от спринг во время инициализации
+бина (ссылка на контекст, имя бина, сервлет-контекст...) Например:
+public class Aaa implements ApplicationContextAware {
+    public void setApplicationContext(ApplicationContext ctx) {...}
+}
+Какие бывают:
+    * ApplicationContextAware
+    * ApplicationEventPublisherAware
+    * BeanFactoryAware
+    * BeanNameAware
+    * ResourceLoaderAware
+    * ServletContextAware
+    * .....
+
+ЕСЛИ В КОДЕ НУЖНО РЕАГИРОВАТЬ НА СОБЫТИЯ КОНТЕКСТА (СОЗДАНИЕ, ЗАВЕРШЕНИЕ, ОБНОВЛЕНИЕ), спринг предоставляет специальный
+интерфейс:
+public class Monitor implements ApplicationListener {
+    public void onApplicationEvent(ApplicationEvent event) {...}
+}
+    * ContextStartedEvent
+    * ContextStoppedEvent
+    * ContextRefreshedEvent
+    * ContextClosedEvent
 
 

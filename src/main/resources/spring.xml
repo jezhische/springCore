@@ -2,6 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 
+       xmlns:context="http://www.springframework.org/schema/context"
+
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:p="http://www.springframework.org/schema/p"
@@ -10,8 +12,13 @@
 http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.3.xsd
+
 http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+    <context:annotation-config/>
 
     <import resource="loggers.xml"/>
     <import resource="util.xml"/>
@@ -36,11 +43,15 @@ http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
 
     <!-- bean creating -->
-    <!-- вот так не работает:  <bean id="app" class="App" p:client-ref="client"> -->
-    <bean id="app" class="App">
-        <constructor-arg ref="client"/>
+
+    <!-- обязательно должны присутствовать сеттеры - и для .properties, и для c: p: -->
+    <!--<bean id="app" class="App" c:client-ref="client" >-->
+    <!-- теперь пользуемся @Autowired: -->
+    <bean id="app" class="App" >
+        <!--<constructor-arg ref="client"/>-->
         <constructor-arg ref="cacheFileEventLogger"/>
-        <!-- следующая map теперь создана как отдельный бин в файле util.xml с помощью util spacename: -->
+        <!-- следующая map теперь создана как отдельный бин в файле util.xml с помощью util spacename,
+        так что следующая запись не нужна: -->
         <!--<constructor-arg>-->
             <!--<map>-->
                 <!--<entry key="INFO" value-ref="consoleEventLogger"/>-->
@@ -52,13 +63,14 @@ http://www.springframework.org/schema/util/spring-util-4.3.xsd">
     </bean>
 
     <!-- знак $ указывает контексту, что в фигурных скобках {} находится ключ из properties file -->
-    <bean id="client" class="clients.Client">
+    <!-- обязательно должны присутствовать сеттеры - и для .properties, и для c: p: -->
+    <bean id="client" class="clients.Client" p:greetings="Hello">
         <constructor-arg>
             <value>${id}</value>
         </constructor-arg>
         <constructor-arg value="${name}"/>
-        <!--<property name="fullName" value="Jeremy Boldwin"/>-->
-        <property name="greetings" value="${greeting}"/>
+        <!-- Можно так, но я попробовал выше указать значение прямо в теге бина -->
+        <!--<property name="greetings" value="${greeting}"/>-->
     </bean>
 
     <!--&lt;!&ndash; СОКРАЩЕННАЯ ЗАПИСЬ СВОЙСВ БИНА: &ndash;&gt;-->
