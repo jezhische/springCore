@@ -23,7 +23,7 @@ http://www.springframework.org/schema/util/spring-util-4.3.xsd">
     <import resource="loggers.xml"/>
     <import resource="util.xml"/>
 
-    <!-- подключение properties: -->
+    <!-- подключение класса для работы с файлами .properties: -->
     <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
         <property name="locations">
             <!-- <list value-type="client.properties"/> - можно так? -->
