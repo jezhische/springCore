@@ -4,6 +4,7 @@ import events.Event;
 import org.apache.commons.io.FileUtils;
 import utilities.EventLogger;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,6 +19,7 @@ public class FileEventLogger implements EventLogger {
     }
     /* с помощью этого метода проверим в spring, что файл можно создать, он не занят и т.п.
     * - check file write access: **/
+    @PostConstruct
     public void init() throws Exception { // м.б. даже private для spring, но в этом случае не получится переопределение
         // метода у класса-наследника для java
         this.file = new File(filename);

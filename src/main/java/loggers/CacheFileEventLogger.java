@@ -2,7 +2,7 @@ package loggers;
 
 import events.Event;
 
-import java.io.IOException;
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +31,7 @@ public class CacheFileEventLogger extends FileEventLogger {
 
     /* destroy-method нужен для того, чтобы spring вызвал его, когда закрывается контекст, и записал в файл последнее
     сообщение (иначе оно потеряется) **/
+    @PreDestroy
     private void destroy() {
         if (!cache.isEmpty()) {
             for (int i = 0; i < cache.size(); i++)

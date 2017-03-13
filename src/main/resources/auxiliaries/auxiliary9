@@ -6,9 +6,11 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-4.3.xsd
 затем тег <context:annotation-config/> (внутри <beans>...</beans>, на месте ...)
 
-@Autowired
+todo @Autowired
 @Autowired (required=false)
-Это именно спринг-аннотация: указание спринг, что значение какого-то свойства нужно вставить из контекста.
+спринг-аннотация: отмечает конструктор, поле или метод как требующий автозаполнения инъекцией зависимости Spring.
+Чтобы аннотация @Autowire присвоила переменной значения соответствующего bean'а, необходимо чтобы этот bean
+либо был объявлен в xml конфигурации приложения, либо существовал класс с соответствующей иньекцией управления.
 Стандартная аннотация, которая будет понятна и для других фреймворков, например, для jbos 7:
 @Inject -- JSR 330
 Разница в том, что для @Autowired можно установить атрибут required=false, тогда при отсутствии нужного бина
@@ -35,7 +37,7 @@ ResourceLoader, ApplicationEventPublisher
 усложняется Unit-тестирование, поскольку уже нет простого способа вставить mock.
 
 
-@Qualifier("bean-name") (спринг-аннотация)
+todo @Qualifier("bean-name") (спринг-аннотация)
 @Resource(name="...") -- JSR 250  (JDK-аннотация)
 - если невозможно внедрить зависимости по типу (например, под тип интерфейса EventLogger подходит несколько бинов)
 (рекомендуется внедрять через @Resource (но эту аннотацию нельзя поставить перед конструктором))
@@ -44,6 +46,20 @@ public class App {
     @Qualifier ("fileEventLogger")
     private EventLogger defaultLogger;
 }
+Для уточнения аргументов при применении с методом с множественными аргументами:
+@Autowired
+    public void multipleArguments(@Qualifier("main") SetterAService setterAService,
+            SetterBService setterBService) {}
+
+todo @PostConstruct
+todo @PreDestroy
+    @PostConstruct
+    public void init() throws Exception {}
+    @PreDestroy
+    private void destroy() {}
+Эти аннотации м. ставить сразу перед несколькими методами, все выполнятся.
+
+
 
 
 

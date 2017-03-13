@@ -16,14 +16,15 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <!--</bean>-->
 
     <!--однако, нам в дальнейшем понадобится не-абстрактный объект, поэтому создаем его:-->
-    <bean id="fileEventLogger" class="loggers.FileEventLogger" init-method="init">
+    <bean id="fileEventLogger" class="loggers.FileEventLogger">
+        <!--больше не нужно  ...init-method="init"> - стоит аннотация -->
         <constructor-arg value="src\main\resources\loggfiles\log1.txt"/>
     </bean>
 
     <!-- благодаря указанию на родителя parent можно не указывать все, что было указано у родителя
     todo: - например, тогда не нужно указывать метод init() -->
-    <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" destroy-method="destroy"
-          parent="fileEventLogger">
+    <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" parent="fileEventLogger">
+        <!--больше не нужно  ...destroy-method="destroy"... - стоит аннотация -->
         <!-- todo: Однако, в случае указания parent нельзя изменять уже описанные в parent-классе параметры, например, так: -->
         <!--<constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>-->
         <constructor-arg value="3"/>
@@ -34,7 +35,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
         <property name="fileEventLogger" ref="fileEventLogger"/>
     </bean>
 
-    <bean name="defaultLogger" class="loggers.CacheFileEventLogger" init-method="init" destroy-method="destroy">
+    <bean name="defaultLogger" class="loggers.CacheFileEventLogger">
         <constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>
         <constructor-arg value="3"/>
 
