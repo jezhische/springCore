@@ -67,8 +67,9 @@ PROPERTIES FILE
         .......
     </util:map>
 
-СОКРАЩЕННАЯ ЗАПИСЬ СВОЙСТВ БИНОВ И АРГУМЕНТОВ КОНСТРУКТОРА - чтобы
-указывать проперти и параметры конструктора не отдельными тегами, а с помощью атрибутов тега <bean>:
+СОКРАЩЕННАЯ ЗАПИСЬ СВОЙСТВ БИНОВ И АРГУМЕНТОВ КОНСТРУКТОРА:
+ todo SCHEMA/P & SCHEMA/C
+- чтобы указывать проперти и параметры конструктора не отдельными тегами, а с помощью атрибутов тега <bean>:
 необходимо определить еще две схемы namespace:
     xmlns:p="http://www.springframework.org/schema/p"
     xmlns:c="http://www.springframework.org/schema/c"
@@ -78,7 +79,7 @@ p-namespace doesn't need a schema definition and is an alternative way of config
 differently than the way you have seen so far.
 ЭТО ОЗНАЧАЕТ, ЧТО ДАННЫЕ АДРЕСА не являются ссылками, указывающими на конкретный xmlns (namespace) ресурс (словарь),
 а просто строками, резервирующими данные имена в namespace документа, и их не нужно указывать как ссылку в
-xsi:schemaLocation= (xsi - это XML Schema Instance)
+xsi:schemaLocation= (xsi - это XML Schema Instance) (т.е. этот URI - это URN, а не URL)
 ДАЛЕЕ: вместо отдельного тега <constructor-arg ref="client"/> пишем в теге бина:
 (todo: обязательно должны быть сеттеры для переменных, иначе они не проставятся!)
      <bean id="app" class="App" c:client-ref="client">
@@ -87,6 +88,32 @@ xsi:schemaLocation= (xsi - это XML Schema Instance)
                  написать литерал, то -ref не нужно, а если это ссылка на переменную - то нужно) - см. ниже)
 ЕЩЕ:
         <bean id="client" class="clients.Client" p:greetings="Hello">
+
+todo Что касается schema/p: instead of <property name="myString" value="Setter Set"/> we could use
+    <bean...p:myString="Setter Set"/>
+todo Что касается schema/c: http://springinpractice.com/2012/04/26/the-spring-constructor-namespace-and-some-deep-thoughts
+You can inject values, or else you can inject references using the -ref suffix.
+    <bean id="usersConnectionRepository" class="org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository"
+            c:dataSource-ref="dataSource" c:connectionFactoryLocator-ref="connectionFactoryLocator"
+            c:textEncryptor-ref="textEncryptor" />
+With p, the XML element name comes from the bean property name, but with constructors that’s not available.
+todo Instead, for c we use the name of the constructor parameter itself.
+So for JdbcUsersConnectionRepository we’re calling constructor that looks like this:
+    public JdbcUsersConnectionRepository(DataSource dataSource, ConnectionFactoryLocator connectionFactoryLocator,
+    TextEncryptor textEncryptor)
+А вот это ${}, я так понимаю, назначение values (????) Или это КЛЮЧ ИЗ PROPERTIES-ФАЙЛА????:
+     <bean id="connectionFactoryLocator"
+            class="org.springframework.social.connect.support.ConnectionFactoryRegistry">
+            <property name="connectionFactories">
+                <list>
+                    <bean class="org.springframework.social.github.connect.GitHubConnectionFactory"
+                        c:clientId="${gitHub.clientId}"
+                        c:clientSecret="${gitHub.clientSecret}" />
+                </list>
+            </property>
+        </bean>
+todo  Here’s why I think the Spring constructor namespace is a bad idea:
+http://springinpractice.com/2012/05/07/springs-constructor-namespace-is-a-bad-idea/
 
 AUTOWIRE - автоматическое связывание с подходящим бином:
     <bean id="..." class="..." autowire="..."/>

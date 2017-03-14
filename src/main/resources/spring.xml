@@ -69,7 +69,7 @@ http://www.springframework.org/schema/util/spring-util-4.3.xsd">
             <value>${id}</value>
         </constructor-arg>
         <constructor-arg value="${name}"/>
-        <!-- Можно так, но я попробовал выше указать значение прямо в теге бина -->
+        <!-- Можно так (но я попробовал выше указать значение прямо в теге бина): -->
         <!--<property name="greetings" value="${greeting}"/>-->
     </bean>
 
