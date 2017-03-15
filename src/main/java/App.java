@@ -1,9 +1,11 @@
 import clients.Client;
+import config.AppConfig;
 import events.Event;
 import events.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import utilities.EventLogger;
 
@@ -32,7 +34,13 @@ public class App {
         app.logEvent(ERROR, "what's up?...");
         app.logEvent(ERROR, "oblivion...");
         ctx.close();
-/* FIXME: разобраться с этим - выкидывает ошибку: **/
+        /* FIXME: разобраться с этим - выкидывает ошибку, если определять тип вот так: (урок 9) **/
+//        ApplicationContext ctxa = new AnnotationConfigApplicationContext();
+        AnnotationConfigApplicationContext ctxa = new AnnotationConfigApplicationContext();
+        ctxa.register(AppConfig.class);
+//        ctxa.register(LoggersConfig.class);
+        ctxa.refresh();
+/* FIXME: разобраться с этим - выкидывает ошибку: (урок 8 или 7) **/
 //        ConfigurableApplicationContext child = new ClassPathXmlApplicationContext(ctx);
 //        App app2 = (App) child.getBean("app");
 //        app2.logEvent("Some event for 1");

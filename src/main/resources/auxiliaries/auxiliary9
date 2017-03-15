@@ -59,6 +59,47 @@ todo @PreDestroy
     private void destroy() {}
 Эти аннотации м. ставить сразу перед несколькими методами, все выполнятся.
 
+todo @Value("Hello there!") - внедрение простых значений (имя файла, имя клиента)
+todo @Value(${client.id}) - из пропертис-файла
+
+ОПРЕДЕЛЕНИЕ БИНОВ С ПОМОЩЬЮ АННОТАЦИЙ
+todo @Component
+todo @Service
+todo @Repisitory
+todo @Controller
+(они не отличаются ничем)
+Чтобы класс, помеченный такой аннотацией, попал в виде бина в контейнер, необходимо сказать спрингу, чтобы он
+просканировал соответствующий package и его там нашел. Тег component-scan:
+    <context:component-scan base-package="..."/>
+- при создании контекста спринг найдет в пакете все классы с аннотацией @Component и т.д. и создаст их бины,
+внедрив необходимые зависимости.
+@Component("some name") (имя бина)
+@Scope("prototype") - задать scope бина
+
+Можно создать отдельный класс, с помощью которого будут создаваться бины:
+todo @Configuration
+public class AppConfig {
+todo    @Bean
+    public Client client() {
+        return new Client()
+    }
+}
+Затем в мэйне создаем контексты следующим образом:
+        ApplicationContext ctxa = new AnnotationConfigApplicationContext(AppConfig.class); //сюда можно поместить
+        // несколько классов, помеченных @Configuration, в которых создаются бины, напр., еще LoggersConfig.class...
+Более гибко - воспользоваться методом register:
+todo REGISTER
+    (выкидывает ошибку - нет ни метода register, ни метода refresh)
+//        ApplicationContext ctxa = new AnnotationConfigApplicationContext();
+а вот так - работает:
+        AnnotationConfigApplicationContext ctxa = new AnnotationConfigApplicationContext();
+        ctxa.register(AppConfig.class);
+        ctxa.register(LoggersConfig.class);
+        ctxa.refresh(); // необходим для обновления контекста
+// чтобы просканировать контекст и загрузить бины в контейнер - метод scan:
+todo SCAN
+        ctxa.scan("beans");
+        ctxa.refresh();
 
 
 
