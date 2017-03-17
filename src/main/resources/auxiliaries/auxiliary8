@@ -115,11 +115,13 @@ So for JdbcUsersConnectionRepository we’re calling constructor that looks like
 todo  Here’s why I think the Spring constructor namespace is a bad idea:
 http://springinpractice.com/2012/05/07/springs-constructor-namespace-is-a-bad-idea/
 
-AUTOWIRE - автоматическое связывание с подходящим бином:
-    <bean id="..." class="..." autowire="..."/>
+todo AUTOWIRE - автоматическое связывание с подходящим бином:
+    <bean id="..." class="..." autowire=".*."/>
         * byName        - Property name
         * byType        - Bean class in property (искать бин, класс которого подходит для этого проперти)
         * constructor   - Bean class in constructor (по типу через конструктор)
+        * autodetect    - сначала происходит связывание в режиме ‘constructor’, а затем
+        (если автосвязывание не произошло) в режиме ‘byType’.
     ограничения:
     - can't be used with primitives, String, and class
     - direct reference has higher priority
