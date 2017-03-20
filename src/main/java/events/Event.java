@@ -1,6 +1,7 @@
 package events;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -11,7 +12,6 @@ public class Event {
     private int id;
     private String msg;
     private Date date;
-    private DateFormat df;
 
 //    public int getId() {
 //        return id;
@@ -25,21 +25,21 @@ public class Event {
         return msg;
     }
 
+
     public void setMsg(String msg) {
         this.msg = msg;
     }
 
-//    public Date getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(Date date) {
-//        this.date = date;
-//    }
-
-    public Event(/*Date date, DateFormat df*/) {
+/* Constructor **/
+    public Event() {
         id = new Random().nextInt(100);
         date = new Date();
+    }
+
+    public static boolean isDay() {
+        DateFormat df = new SimpleDateFormat("H");
+        int currentTime = Integer.valueOf(df.format(new Date()));
+        return (currentTime >= 8 && currentTime < 17);
     }
 
     @Override

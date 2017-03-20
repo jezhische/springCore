@@ -17,16 +17,17 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
     <!--однако, нам в дальнейшем понадобится не-абстрактный объект, поэтому создаем его:-->
     <bean id="fileEventLogger" class="loggers.FileEventLogger">
-        <!--больше не нужно  ...init-method="init"> - стоит аннотация -->
+        <!--больше не нужно  ...init-method="init"> - стоит аннотация @PostConstruct -->
         <constructor-arg value="src\main\resources\loggfiles\log1.txt"/>
     </bean>
 
     <!-- благодаря указанию на родителя parent можно не указывать все, что было указано у родителя
     todo: - например, тогда не нужно указывать метод init() -->
-    <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" parent="fileEventLogger">
-        <!--больше не нужно  ...destroy-method="destroy"... - стоит аннотация -->
-        <!-- todo: Однако, в случае указания parent нельзя изменять уже описанные в parent-классе параметры, например, так: -->
-        <!--<constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>-->
+    <!--<bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger" parent="fileEventLogger">-->
+    <!-- однако, не получится поменять, например, аргументы конструктора, поэтому здесь я воздержусь от наследоывания -->
+    <bean id="cacheFileEventLogger" class="loggers.CacheFileEventLogger">
+        <!--больше не нужно  ...destroy-method="destroy"... - стоит аннотация @PreDestroy -->
+        <constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>
         <constructor-arg value="3"/>
     </bean>
 
@@ -35,11 +36,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
         <property name="fileEventLogger" ref="fileEventLogger"/>
     </bean>
 
-    <bean name="defaultLogger" class="loggers.CacheFileEventLogger">
-        <constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>
-        <constructor-arg value="3"/>
-
-    </bean>
+    <!--<bean name="defaultLogger" class="loggers.CacheFileEventLogger">-->
+        <!--<constructor-arg value="src\main\resources\loggfiles\log2cache.txt"/>-->
+        <!--<constructor-arg value="3"/>-->
+    <!--</bean>-->
 
 
 </beans>

@@ -33,6 +33,10 @@ public class App {
         app.logEvent(null, "hey, 1, are you home yet?");
         app.logEvent(ERROR, "what's up?...");
         app.logEvent(ERROR, "oblivion...");
+        // здесь пользуемся логгером, полученным в конструкторе, а туда мы получаем, в зависимости от времени суток,
+        // либо ConsoleEventLogger, либо FileEventLogger (см. конструктор App в spring.xml)
+        app.eventLogger.logEvent(new Event());
+        System.out.println(app.client.getGreetings());
         ctx.close();
         /* FIXME: разобраться с этим - выкидывает ошибку, если определять тип вот так: (урок 9) **/
 //        ApplicationContext ctxa = new AnnotationConfigApplicationContext();
@@ -64,14 +68,14 @@ public class App {
         this.loggers = loggers;
     }
 
-    public void setDefaultLogger(EventLogger defaultLogger) {
-        this.defaultLogger = defaultLogger;
-    }
+//    public void setDefaultLogger(EventLogger defaultLogger) {
+//        this.defaultLogger = defaultLogger;
+//    }
 
     private void logEvent(EventType type, String msg) {
         EventLogger logger = loggers.get(type);
         if (logger == null) {
-            logger = defaultLogger;
+            logger = eventLogger;
         }
         String message = msg.replaceAll(client.getId(), client.getFullName());
         System.out.println(message);

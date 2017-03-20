@@ -2,6 +2,7 @@ package loggers;
 
 import events.Event;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,9 @@ public class CacheFileEventLogger extends FileEventLogger {
         }
 //        cache.clear();
     }
+
     @Override
+    @PostConstruct
     public void init() throws Exception {
         super.init();
     }

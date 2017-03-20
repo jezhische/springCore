@@ -30,4 +30,6 @@ public class Client {
         greetings = gr;
     }
 
+    public String getGreetings () {return greetings;}
+
 }

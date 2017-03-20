@@ -7,6 +7,7 @@
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
 
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans
@@ -16,9 +17,13 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-4.3.xsd
 
 http://www.springframework.org/schema/util
-http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+http://www.springframework.org/schema/util/spring-util-4.3.xsd
+
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
     <context:annotation-config/>
+    <aop:aspectj-autoproxy/>
 
     <import resource="loggers.xml"/>
     <import resource="util.xml"/>
@@ -45,11 +50,15 @@ http://www.springframework.org/schema/util/spring-util-4.3.xsd">
     <!-- bean creating -->
 
     <!-- обязательно должны присутствовать сеттеры - и для .properties, и для c: p: -->
-    <!--<bean id="app" class="App" c:client-ref="client" >-->
+    <!-- было так: <bean id="app" class="App" c:client-ref="client" > -->
     <!-- теперь пользуемся @Autowired: -->
     <bean id="app" class="App" >
         <!--<constructor-arg ref="client"/>-->
-        <constructor-arg ref="cacheFileEventLogger"/>
+        <!-- пользуемся языком выражений - обращаемся к статическому методу класса Event: -->
+        <!-- todo: NB!!! при использовании expession language писать уже не ref, а value!!! -->
+        <constructor-arg value="#{T(events.Event).isDay()? consoleEventLogger: cacheFileEventLogger}"/>
+        <!-- todo: или же вот такой вариант записи: -->
+        <!-- todo: <constructor-arg ref="#{T(events.Event).isDay()? 'consoleEventLogger': 'cacheFileEventLogger'}"/>-->
         <!-- следующая map теперь создана как отдельный бин в файле util.xml с помощью util spacename,
         так что следующая запись не нужна: -->
         <!--<constructor-arg>-->
@@ -58,13 +67,15 @@ http://www.springframework.org/schema/util/spring-util-4.3.xsd">
                 <!--<entry key="ERROR" value-ref="combinedEventLogger"/>-->
             <!--</map>-->
         <!--</constructor-arg>-->
-        <constructor-arg ref="loggerMap"/>
-        <property name="defaultLogger" ref="defaultLogger"/>
+        <!-- todo кроме того, попробуем записать ее на языке выражений, не так: -->
+        <!--<constructor-arg ref="loggerMap"/>-->
+        <!-- , а вот так: -->
+        <constructor-arg value="#{loggerMap}"/>
     </bean>
 
     <!-- знак $ указывает контексту, что в фигурных скобках {} находится ключ из properties file -->
     <!-- обязательно должны присутствовать сеттеры - и для .properties, и для c: p: -->
-    <bean id="client" class="clients.Client" p:greetings="Hello">
+    <bean id="client" class="clients.Client" p:greetings="#{systemEnvironment['USERNAME']} + #{systemProperties['dir']}">
         <constructor-arg>
             <value>${id}</value>
         </constructor-arg>
@@ -83,14 +94,13 @@ http://www.springframework.org/schema/util/spring-util-4.3.xsd">
     <!--</bean>-->
 
 <!-- Prototype - new object on every bean call: -->
-    <bean id="event" class="events.Event" scope="prototype">
+    <bean id="event" class="events.Event" scope="prototype" autowire="byName">
         <!-- внутренний бин - виден только там, где он определен, поэтому не имеет имени или id - достучаться до него
          невозможно. Будет создаваться при создании event: -->
         <constructor-arg>
             <bean class="java.util.Date"/>
         </constructor-arg>
-        <!--<constructor-arg ref="date"/>-->
-        <!--<constructor-arg ref="df"/>-->
+        <property name="msg" value="какое-то сообщение..."/>
     </bean>
 
 <!-- поскольку DateFormat - абстрактный класс, для создания его образца нужно воспользоваться статическим методом.
