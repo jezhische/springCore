@@ -107,4 +107,6 @@ http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
  Это возможно в spring с помощью использования factory-method: -->
     <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInstance"/>
 
+    <bean id="logaspect" class="aspects.LoggingAspect"/>
+
 </beans>
