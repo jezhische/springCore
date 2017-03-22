@@ -35,7 +35,7 @@ public class App {
         app.logEvent(ERROR, "oblivion...");
         // здесь пользуемся логгером, полученным в конструкторе, а туда мы получаем, в зависимости от времени суток,
         // либо ConsoleEventLogger, либо FileEventLogger (см. конструктор App в spring.xml)
-        app.eventLogger.logEvent(new Event());
+        app.defaultLogger.logEvent(new Event());
         System.out.println(app.client.getGreetings());
         ctx.close();
         /* FIXME: разобраться с этим - выкидывает ошибку, если определять тип вот так: (урок 9) **/
@@ -55,16 +55,16 @@ public class App {
 
     @Autowired
     private Client client;
-    private EventLogger eventLogger;
+//    private EventLogger defaultLogger;
     @Autowired
     @Qualifier ("fileEventLogger")
     private EventLogger defaultLogger;
     private Map<EventType, EventLogger> loggers;
 
-
+/** Constructor */
     public App(Client client, EventLogger eventLogger, Map<EventType, EventLogger> loggers) {
         this.client = client;
-        this.eventLogger =eventLogger;
+        this.defaultLogger =eventLogger;
         this.loggers = loggers;
     }
 
@@ -75,7 +75,7 @@ public class App {
     private void logEvent(EventType type, String msg) {
         EventLogger logger = loggers.get(type);
         if (logger == null) {
-            logger = eventLogger;
+            logger = defaultLogger;
         }
         String message = msg.replaceAll(client.getId(), client.getFullName());
         System.out.println(message);

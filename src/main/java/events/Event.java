@@ -30,7 +30,7 @@ public class Event {
         this.msg = msg;
     }
 
-/* Constructor **/
+/** Constructor */
     public Event() {
         id = new Random().nextInt(100);
         date = new Date();
