@@ -1,7 +1,7 @@
 package aspects;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 
 /**
  * Created by WORK_x64 on 20.03.2017.
@@ -10,14 +10,13 @@ import org.aspectj.lang.annotation.*;
 public class LoggingAspect {
     // в пойнткате определен шаблон, под который попадают все методы logEvent с любыми параметрами
     // во всех классах-логгерах. Имя этого пойнтката - это имя данного метода allLogEventMethods:
-    // (я так понимаю, это так: выполнение (execution) первая * = "любого количества" вторая * = "любого класса"
-    // методов logEvent (..) = "с любыми аргументами")
+    // шаблон: ("(пропущены модификаторы) * с любым возвращаемым типом (пропущен объявленный тип)
+    // * в любом пакете любого класса .logEvent метод (..) с любыми аргументами (пропущено исключение)"
     @Pointcut("execution(* *.logEvent(..))")
     private void allLogEventMethods() {
     }
 
-    // здесь применена логическая операция для объединения пойнткатов.............. (скорее всего,в
-    // шаблоне написано: пойнткат allLogEventMethods&& все ....(??)... файлы с названием любойFileлюбойLogger):
+    // здесь применена логическая операция для объединения пойнткатов.............. (
     @Pointcut("allLogEventMethods() && within(*.*File*Logger)")
     private void logEventInsideFileLoggers() {
     }

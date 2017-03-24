@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +17,9 @@ import java.util.Map;
 public class StatisticsAspect {
     private Map<Class<?>, Integer> counter = new HashMap<>();
 
-    // создаем пойнткат с шаблоном "любое количество любого класса методов logEvent с любыми аргументами":
-    @Pointcut("execution(* *.*logEvent(..))")
+    // создаем пойнткат с шаблоном "(пропущены модификаторы) * с любым возвращаемым типом (пропущен объявленный тип)
+    // * в любом пакете любого класса .logEvent метод (..) с любыми аргументами (пропущено исключение)":
+    @Pointcut("execution(* *.logEvent(..))")
     private void allLogEventMethods() {}
 
     // создаем advice-метод для увеличения счетчика:
@@ -32,6 +34,10 @@ public class StatisticsAspect {
         }
         // если уже есть, просто переписываем, увеличивая счет:
         counter.put(clazz, counter.get(clazz) + 1);
+    }
+
+    public Map<Class<?>, Integer> getCounter() {
+        return Collections.unmodifiableMap(counter);
     }
 
     // теперь advice-метод для того, чтобы эта информация была выведена в консоль после выполнения App.

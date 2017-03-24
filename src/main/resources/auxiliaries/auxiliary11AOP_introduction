@@ -1,0 +1,73 @@
+Spring AOP (AspectJ) Pointcut Expressions
+
+https://blog.espenberntsen.net/2010/03/20/aspectj-cheat-sheet/
+http://howtodoinjava.com/spring/spring-aop/writing-spring-aop-aspectj-pointcut-expressions-with-examples/
+
+todo общий вид шаблона:
+@Pointcut("execution(modifiers-pattern? ret-type-pattern
+declaring-type-pattern? name-pattern(param-pattern) throws-pattern?)")
+
+Пример и его разбор:
+@Pointcut("[method designator](* aspects.trace.demo.*.*(..))")
+public void traceMethodsInDemoPackage() {}
+modifiers-pattern? -        пропущено
+ret-type-pattern            * = any return type
+declaring-type-pattern? -   пропущено (ИЛИ, МОЖЕТ, ЭТО НАЗВАНИЕ ПАКЕТА aspects.trace.demo, если это не-свой пакет?)
+name-pattern -              aspects.trace.demo.*.* (aspects.trace.demo = package, .* = any class, .* = any method)
+(param-pattern) -           (..) = any number of parameters
+throws-pattern? -           пропущено
+
+
+Examples with EmployeeManager interface.
+1) Matching Method Signature Patterns
+
+todo Matching all methods within a class in another package:
+execution(* com.howtodoinjava.EmployeeManager.*(..))
+
+todo Matching all methods within a class within same package
+execution(* EmployeeManager.*(..))
+
+todo Matching all public methods in EmployeeManager
+execution(public * EmployeeManager.*(..))
+
+todo Matching all public methods in EmployeeManager with return type EmployeeDTO
+execution(public EmployeeDTO EmployeeManager.*(..))
+
+todo Matching all public methods in EmployeeManager with return type EmployeeDTO and first parameter as EmployeeDTO
+execution(public EmployeeDTO EmployeeManager.*(EmployeeDTO, ..))
+
+todo Matching all public methods in EmployeeManager with return type EmployeeDTO and definite parameters
+execution(public EmployeeDTO EmployeeManager.*(EmployeeDTO, Integer))
+
+2) Matching Type Signature Patterns
+
+todo Matching all methods defined in classes inside package com.howtodoinjava
+within(com.howtodoinjava.*)
+
+todo Matching all methods defined in classes inside package com.howtodoinjava and classes inside all sub-packages as well
+within(com.howtodoinjava..*)
+
+todo Match all methods with a class in another package
+within(com.howtodoinjava.EmployeeManagerImpl) // NB: EmployeeManagerImpl - это клас, имплементирующий EmployeeManager
+
+todo Match all methods with a class in same package
+within(EmployeeManagerImpl)
+
+todo Match all methods within all all implementing classes of EmployeeManager interface
+Use + (plus) sign to match all implementations of an interface.
+within(EmployeeManagerImpl+)
+
+3) Matching Bean Name Patterns
+
+todo Match all methods defined in beans whose name ends with ‘Manager’.
+bean(*Manager)
+
+4) Combining Pointcut Expressions
+
+In AspectJ, pointcut expressions can be combined with the operators && (and), || (or), and ! (not). e.g.
+todo Match all methods with names ending with Manager and DAO
+bean(*Manager) || bean(*DAO)
+
+
+
+
