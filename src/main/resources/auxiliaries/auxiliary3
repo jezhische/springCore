@@ -40,6 +40,17 @@ https://www.youtube.com/watch?v=kvcFK7criFc&list=PL6jg6AGdCNaWF-sUH2QDudBRXo54zu
     </bean>
  СПРИНГ ВЫЗОВЕТ ЛЮБОЙ, ДАЖЕ PRIVATE КОНСТРУКТОР (нужно уточнить насчет этого - нарушается инкапсуляция?)
 
+ property: (здесь не статик, а ссылочный тип):
+ todo: NB: имя проперти дается ПО СЕТТЕРУ; если имя сеттера setPtigure, а не setFigure, то и имя проперти
+ должно быть "ptigure":
+     <bean name="printer" class="com.example.component.Print">
+         <property name="ptigure" ref="circ"/>
+     </bean>
+     <bean id="circ" class="com.example.component.figure.Circle">
+         <constructor-arg value="circle"/>
+         <constructor-arg value="5.25"/>
+     </bean>
+
 -------------------------------------------------
 Создаем сам контейнер:
 --------------------------------------------------
